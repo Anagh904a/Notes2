@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ColorNotes Inspired Notes App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f3f3;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      background-color: #ffa500;
+      color: white;
+      padding: 10px;
+      margin: 0;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      background-color: #ffa500;
+      color: white;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #ff8c00;
+    }
+    textarea {
+      width: 90%;
+      height: 150px;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+    }
+    input[type="password"] {
+      padding: 5px;
+      margin: 10px 0;
+      width: 80%;
+    }
+    .container {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .note {
+      background: #fffacd;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid #ffa500;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .hidden {
+      display: none;
+    }
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #ffa500;
+      color: white;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .nav-button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .add-button {
+      background-color: white;
+      color: #ffa500;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 30px;
+      line-height: 60px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      position: relative;
+      bottom: 20px;
+    }
+    .add-button:hover {
+      background-color: #ff8c00;
+      color: white;
+    }
+
+    /* Password Modal */
+    #passwordModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+    }
+    #passwordModal input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #passwordModal button {
+      width: 100%;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Notes App</h1>
+
+  <div id="notesSection" class="container">
+    <h2>Your Notes</h2>
+    <div id="notesContainer"></div>
+  </div>
+
+  <!-- Add Note Form -->
+  <div id="addNoteSection" class="container hidden">
+    <h3>Add a New Note</h3>
+    <input id="noteTitle" type="text" placeholder="Enter note title...">
+    <textarea id="noteContent" placeholder="Write your note here..."></textarea>
+    <input type="password" id="notePassword" placeholder="Optional Password">
+    <button onclick="saveNote()">Save Note</button>
+    <button onclick="cancelNote()">Cancel</button>
+  </div>
+
+  <!-- Password Modal -->
+  <div id="passwordModal">
+    <div class="modal-content">
+      <h3>Enter Password</h3>
+      <input type="password" id="passwordInput" placeholder="Password">
+      <button onclick="verifyPassword()">Submit</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-button" onclick="showSection('notesSection')">Notes</button>
+    <div class="add-button" onclick="showAddNote()">+</div>
+  </div>
+
+  <script>
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
+    }
+
+    function showAddNote() {
+      showSection('addNoteSection');
+      document.getElementById('noteContent').value = "";
+      document.getElementById('noteTitle').value = "";
+      document.getElementById('notePassword').value = "";
+    }
+
+    function cancelNote() {
+      showSection('notesSection');
+    }
+
+    function saveNote() {
+      const title = document.getElementById('noteTitle').value.trim();
+      const content = document.getElementById('noteContent').value.trim();
+      const password = document.getElementById('notePassword').value.trim();
+
+      if (content === "") {
+        alert("Note content cannot be empty!");
+        return;
+      }
+
+      const note = { title, content, password };
+      notes.push(note);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      displayNotes();
+      showSection('notesSection');
+    }
+
+    function displayNotes() {
+      const container = document.getElementById('notesContainer');
+      container.innerHTML = "";
+      notes.forEach((note, index) => {
+        const noteDiv = document.createElement('div');
+        noteDiv.className = "note";
+        noteDiv.innerHTML = `
+          <h4>${note.title}</h4>
+          <p>${note.password ? "(Password Protected Note)" : note.content}</p>
+          <button onclick="openNote(${index})">Open</button>
+          <button onclick="deleteNote(${index})">Delete</button>
+        `;
+        container.appendChild(noteDiv);
+      });
+    }
+
+    function openNote(index) {
+      const note = notes[index];
+      if (note.password) {
+        document.getElementById('passwordModal').style.visibility = 'visible';
+        document.getElementById('passwordInput').value = "";
+        document.getElementById('passwordModal').dataset.noteIndex = index;
+      } else {
+        showNoteContent(note);
+      }
+    }
+
+    function verifyPassword() {
+      const password = document.getElementById('passwordInput').value;
+      const index = document.getElementById('passwordModal').dataset.noteIndex;
+      const note = notes[index];
+
+      if (password === note.password) {
+        document.getElementById('passwordModal').style.visibility = 'hidden';
+        showNoteContent(note);
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+    function showNoteContent(note) {
+      document.getElementById('noteTitle').value = note.title;
+      document.getElementById('noteContent').value = note.content;
+      document.getElementById('notePassword').value = note.password;
+      showSection('addNoteSection');
+    }
+
+    function deleteNote(index) {
+      if (confirm("Are you sure you want to delete this note?")) {
+        notes.splice(index, 1);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        displayNotes();
+      }
+    }
+
+    displayNotes();
+  </script>
+</body>
+</html>
