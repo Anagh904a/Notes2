@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notes App</title>
+  <title>ColorNotes Inspired Notes App</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -33,23 +34,25 @@
     button:hover {
       background-color: #ff8c00;
     }
-    textarea, input[type="text"] {
+    textarea {
       width: 90%;
-      margin: 10px auto;
+      height: 150px;
+      margin: 10px;
       padding: 10px;
-      display: block;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-family: Arial, sans-serif;
       font-size: 16px;
+    }
+    input[type="password"] {
+      padding: 5px;
+      margin: 10px 0;
+      width: 80%;
     }
     .container {
       flex: 1;
       padding: 10px;
       overflow-y: auto;
-      display: none;
-    }
-    .visible {
-      display: block;
     }
     .note {
       background: #fffacd;
@@ -58,6 +61,9 @@
       border: 1px solid #ffa500;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .hidden {
+      display: none;
     }
     .bottom-nav {
       display: flex;
@@ -95,29 +101,137 @@
       background-color: #ff8c00;
       color: white;
     }
+
+    /* Password Modal */
+    #passwordModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+    }
+    #passwordModal input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #passwordModal button {
+      width: 100%;
+      padding: 10px;
+    }
+
+    #addListSection {
+    background-color: #fff; /* White background */
+    padding: 20px; /* Padding around the content */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    margin-top: 20px; /* Space above the section */
+}
+
+.input-field {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside the input */
+    margin: 10px 0; /* Margin above and below */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Rounded corners */
+}
+
+button {
+    padding: 8px 12px; /* Padding for buttons */
+    margin: 5px; /* Margin around buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    border: none; /* No border */
+    background-color: #ffa500; /* Orange background */
+    color: white; /* White text */
+    border-radius: 4px; /* Rounded corners */
+}
+
+button:hover {
+    background-color: #ff8c00; /* Darker orange on hover */
+}
+
+.close-button {
+    background-color: #ff4c4c; /* Red background for close button */
+}
+
+.close-button:hover {
+    background-color: #ff1c1c; /* Darker red on hover */
+}
+
+.modal {
+    position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    
+}
+
+.modal-content {
+    background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+}
+
+
   </style>
 </head>
 <body>
   <h1>Notes App</h1>
 
-  <!-- Notes Section -->
-  <div id="notesSection" class="container visible">
+  <div id="notesSection" class="container">
     <h2>Your Notes</h2>
     <div id="notesContainer"></div>
   </div>
 
-  <!-- Add/Edit Note Section -->
-  <div id="addNoteSection" class="container">
-    <h2 id="noteHeading">Add Note</h2>
-    <input type="text" id="noteTitle" placeholder="Note Title">
+  <div id="listsContainer" class="container hidden">
+    <h2>Your Lists</h2>
+    <div id="listsSection">
+        <div id="listsContainerContent"></div>
+    </div>
+</div>
+  
+
+  <!-- Add Note Form -->
+  <div id="addNoteSection" class="container hidden">
+    <h3>Add a New Note</h3>
+    <input id="noteTitle" type="text" placeholder="Enter note title...">
     <textarea id="noteContent" placeholder="Write your note here..."></textarea>
     <input type="password" id="notePassword" placeholder="Optional Password">
     <button onclick="saveNote()">Save Note</button>
     <button onclick="cancelNote()">Cancel</button>
   </div>
 
+  <!-- Password Modal -->
+  <div id="passwordModal">
+    <div class="modal-content">
+      <h3>Enter Password</h3>
+      <input type="password" id="passwordInput" placeholder="Password">
+      <button onclick="verifyPassword()">Submit</button>
+      <button onclick="closePasswordModal()">Close</button>
+    </div>
+  </div>
+
+  
   <!-- Settings Section -->
-  <div id="settingsSection" class="container">
+  <div id="settings" class="container">
     <h2>Settings</h2>
     <h3>Privacy</h3>
     <label>
@@ -135,89 +249,54 @@
     <button onclick="importNotes()">Continue Import</button>
   </div>
 
-  <!-- Bottom Navigation Bar -->
+<!-- Add Lists Section -->
+<div id="addListSection" class="container">>
+<h3>Add a New List</h3>
+    <input id="listTitle" type="text" placeholder="Enter list title...">
+    <div id="checklistContainer"></div> <!-- Container for checklist items -->
+    <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
+    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
+    <button onclick="saveList()">Save List</button>
+</div>
+</div>
+
+<!-- Add Options Modal -->
+<div id="addListSection" class="container hidden">
+    <h3>Add a New List</h3>
+    <input id="listTitle" type="text" placeholder="Enter list title..." class="input-field">
+    <div id="checklistContainer"></div> <!-- Container for checklist items -->
+    <input id="newItem" type="text" placeholder="Enter item..." class="input-field"> <!-- Input for new item -->
+    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
+    <button onclick="saveList()">Save List</button>
+    <button onclick="cancelList()">Cancel</button>
+    <button onclick="closeAddListSection()" class="close-button">Close</button> <!-- Close button -->
+</div>
+</div>
+  
   <div class="bottom-nav">
-    <button class="nav-button" onclick="navigateTo('notesSection')">Notes</button>
-    <div class="add-button" onclick="showAddNote()">+</div>
-    <button class="nav-button" onclick="navigateTo('settingsSection')">Settings</button>
-  </div>
+    <button class="nav-button" onclick="showSection('listsContainer')">Lists</button>
+    <button class="nav-button" onclick="showSection('notesSection')">Notes</button>
+    <div class="add-button" onclick="showAddOptions()">+</div>
+<button class="nav-button" onclick="showSection('settings')">Settings</button>
+<button class="nav-button " onclick="showSection('moreSection')">More</button>
+
+</div>
+
+<!-- More Section -->
+<div id="moreSection" class="container hidden">
+    <h2>More Features Coming Soon!</h2>
+    <p>This section will include features like:</p>
+    <ul>
+        <li>Sync Feature</li>
+        <li>Login Feature</li>
+    </ul>
+    <p>Stay tuned for updates!</p>
+</div>
 
   <script>
-    let notes = JSON.parse(localStorage.getItem('notes')) || [];
-    let currentNoteIndex = null;
-
-    function navigateTo(sectionId) {
-      document.querySelectorAll('.container').forEach(section => {
-        section.classList.remove('visible');
-      });
-      document.getElementById(sectionId).classList.add('visible');
-    }
-
-    function displayNotes() {
-      const container = document.getElementById('notesContainer');
-      container.innerHTML = '';
-      notes.forEach((note, index) => {
-        const noteDiv = document.createElement('div');
-        noteDiv.className = 'note';
-        noteDiv.innerHTML = `
-          <p>${note.title || '(Untitled)'}</p>
-          <button onclick="openNote(${index})">Open</button>
-          <button onclick="deleteNote(${index})">Delete</button>
-        `;
-        container.appendChild(noteDiv);
-      });
-    }
-
-    function showAddNote() {
-      navigateTo('addNoteSection');
-      resetForm();
-    }
-
-    function openNote(index) {
-      const note = notes[index];
-      currentNoteIndex = index;
-      document.getElementById('noteTitle').value = note.title || '';
-      document.getElementById('noteContent').value = note.content || '';
-      document.getElementById('notePassword').value = '';
-      navigateTo('addNoteSection');
-    }
-
-    function saveNote() {
-      const title = document.getElementById('noteTitle').value;
-      const content = document.getElementById('noteContent').value;
-      const password = document.getElementById('notePassword').value;
-
-      if (currentNoteIndex !== null) {
-        notes[currentNoteIndex] = { title, content, password };
-      } else {
-        notes.push({ title, content, password });
-      }
-
-      localStorage.setItem('notes', JSON.stringify(notes));
-      displayNotes();
-      navigateTo('notesSection');
-    }
-
-    function deleteNote(index) {
-      if (confirm('Are you sure you want to delete this note?')) {
-        notes.splice(index, 1);
-        localStorage.setItem('notes', JSON.stringify(notes));
-        displayNotes();
-      }
-    }
-
-    function resetForm() {
-      document.getElementById('noteTitle').value = '';
-      document.getElementById('noteContent').value = '';
-      document.getElementById('notePassword').value = '';
-      currentNoteIndex = null;
-    }
-
-    function cancelNote() {
-      resetForm();
-      navigateTo('notesSection');
-    }
-
+    
+    let notes = JSON.parse(localStorage.getItem('notes')) || []; 
+ 
     function showCredits() {
       const credits = document.getElementById('creditsSection');
       credits.style.display = credits.style.display === 'none' ? 'block' : 'none';
@@ -250,8 +329,337 @@
       displayNotes();
       alert('Notes imported successfully!');
     }
+    
+    function showSection(sectionId) {
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+    document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
+}
 
+    function showAddNote() {
+      showSection('addNoteSection');
+      document.getElementById('noteContent').value = "";
+      document.getElementById('noteTitle').value = "";
+      document.getElementById('notePassword').value = "";
+    }
+
+    function cancelNote() {
+      showSection('notesSection');
+    }
+
+    function saveNote() {
+      const title = document.getElementById('noteTitle').value.trim();
+      const content = document.getElementById('noteContent').value.trim();
+      const password = document.getElementById('notePassword').value.trim();
+
+      if (content === "") {
+        alert("Note content cannot be empty!");
+        return;
+      }
+
+      const note = { title, content, password };
+      notes.push(note);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      displayNotes();
+      showSection('notesSection');
+    }
+
+    function displayNotes() {
+      const container = document.getElementById('notesContainer');
+      container.innerHTML = "";
+      notes.forEach((note, index) => {
+        const noteDiv = document.createElement('div');
+        noteDiv.className = "note";
+        noteDiv.innerHTML = `
+          <h4>${note.title}</h4>
+          <p>${note.password ? "(Password Protected Note)" : note.content}</p>
+          <button onclick="openNote(${index})">Open</button>
+          <button onclick="deleteNote(${index})">Delete</button>
+        `;
+        container.appendChild(noteDiv);
+      });
+    }
+
+    function openNote(index) {
+      const note = notes[index];
+      if (note.password) {
+        document.getElementById('passwordModal').style.visibility = 'visible';
+        document.getElementById('passwordInput').value = "";
+        document.getElementById('passwordModal').dataset.noteIndex = index;
+      } else {
+        showNoteContent(note);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+    // Hide all sections initially
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+
+    // Show only the notes section on page load
+    showSection('notesSection'); // Show the notes section
+
+    // Load notes and lists from local storage
     displayNotes();
+    displayLists();
+});
+
+    function closePasswordModal() {
+    document.getElementById('passwordModal').style.visibility = 'hidden';
+    document.getElementById('passwordInput').value = ""; // Clear the password input field
+}
+
+function showListsSection() {
+    showSection('listsContainer'); // Show the lists container
+    displayLists(); // Refresh the displayed lists
+    document.getElementById('addListSection').classList.add('hidden'); // Ensure add list section is hidden
+}
+
+    function verifyPassword() {
+      const password = document.getElementById('passwordInput').value;
+      const index = document.getElementById('passwordModal').dataset.noteIndex;
+      const note = notes[index];
+
+      if (password === note.password) {
+        document.getElementById('passwordModal').style.visibility = 'hidden';
+        showNoteContent(note);
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+    function showNoteContent(note) {
+      document.getElementById('noteTitle').value = note.title;
+      document.getElementById('noteContent').value = note.content;
+      document.getElementById('notePassword').value = note.password;
+      showSection('addNoteSection');
+    }
+
+    function deleteNote(index) {
+      if (confirm("Are you sure you want to delete this note?")) {
+        notes.splice(index, 1);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        displayNotes();
+      }
+    }
+
+    function closeAddListSection() {
+    document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
+    showSection('listsContainer'); // Show the lists section
+}
+
+    // Function to show the add options modal
+function showAddOptions() {
+    const modal = document.getElementById('addOptionsModal');
+    modal.style.display = 'block'; // Show the modal
+    modal.style.opacity = '1'; // Optional: Add fade-in effect
+}
+
+// Function to close the add options modal
+function closeAddOptions() {
+    const modal = document.getElementById('addOptionsModal');
+    modal.style.display = 'none'; // Hide the modal
+    modal.style.opacity = '0'; // Optional: Add fade-out effect
+}
+
+// Function to open a list and pre-fill the add list section
+
+
+// Function to show the add list section
+// Function to show the add list section
+function showAddListSection() {
+    // Hide all sections first
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+
+    // Show the add list section
+    document.getElementById('addListSection').classList.remove('hidden'); // Show the add list section
+    document.getElementById('listTitle').value = ""; // Clear the title input
+    document.getElementById('newItem').value = ""; // Clear the new item input
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+}
+
+// Function to cancel adding a list
+function cancelList() {
+    // Hide the add list section and show the lists section
+    document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
+    showSection('listsContainer'); // Show the lists section
+}
+
+// Function to show a specific section
+function showSection(sectionId) {
+    document.querySelectorAll('.container').forEach(section => {
+        section.classList.add('hidden'); // Hide all sections
+    });
+    document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
+}
+
+
+
+// Function to save a new list
+function saveList() {
+    const title = document.getElementById('listTitle').value.trim();
+
+    if (title === "" || currentItems.length === 0) {
+        alert("List title and items cannot be empty!");
+        return;
+    }
+
+    // Check for duplicates
+    const existingListIndex = lists.findIndex(list => list.title === title);
+    if (existingListIndex !== -1) {
+        alert("A list with this title already exists!");
+        return;
+    }
+
+    const list = { title, items: currentItems.slice() }; // Create a new list object
+    lists.push(list);
+    localStorage.setItem('lists', JSON.stringify(lists));
+    displayLists(); // Refresh the displayed lists
+    document.getElementById('listTitle').value = ""; // Clear the title input
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+}
+
+// Function to display lists
+function displayLists() {
+    const container = document.getElementById('listsContainerContent');
+    container.innerHTML = ""; // Clear existing lists
+    lists.forEach((list, index) => {
+        const listDiv = document.createElement('div');
+        listDiv.className = "list";
+        listDiv.innerHTML = `
+           <button onclick="openList(${index})">Open</button>
+            <button onclick="deleteList(${index})">Delete</button>
+        `;
+        container.appendChild(listDiv);
+    });
+}
+
+// Function to open a list and pre-fill the add list section
+function openList(index) {
+    const list = lists[index];
+    document.getElementById('listTitle').value = list.title;
+    currentItems = list.items.slice(); // Copy items to currentItems
+    displayChecklist(); // Display the checklist with items
+    showSection('addListSection'); // Show the add list section
+}
+
+
+
+    const lists = JSON.parse(localStorage.getItem('lists')) || [];
+let currentItems = []; // Array to hold current checklist items
+
+// Function to show the lists section
+function showListsSection() {
+    showSection('listsContainer');
+    displayLists(); // Refresh the displayed lists
+}
+
+// Function to show the add list section
+function showAddListSection() {
+    showSection('addListSection');
+    document.getElementById('listTitle').value = "";
+    document.getElementById('newItem').value = "";
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+}
+
+// Function to add an item to the checklist
+function addItem() {
+    const newItemInput = document.getElementById('newItem');
+    const newItemValue = newItemInput.value.trim();
+
+    if (newItemValue === "") {
+        alert("Item cannot be empty!");
+        return;
+    }
+
+    currentItems.push(newItemValue); // Add the new item to the current items array
+    newItemInput.value = ""; // Clear the input field
+    displayChecklist(); // Update the checklist display
+}
+
+// Function to display the checklist
+function displayChecklist() {
+    const checklistContainer = document.getElementById('checklistContainer');
+    checklistContainer.innerHTML = ""; // Clear existing items
+
+    currentItems.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.innerHTML = `
+            <input type="checkbox" id="item-${index}">
+            <label for="item-${index}">${item}</label>
+            <button onclick="removeItem(${index})">Remove</button>
+        `;
+        checklistContainer.appendChild(itemDiv);
+    });
+}
+
+// Function to remove an item from the checklist
+function removeItem(index) {
+    currentItems.splice(index, 1); // Remove the item from the array
+    displayChecklist(); // Update the checklist display
+}
+
+// Function to save a new list
+function saveList() {
+    const title = document.getElementById('listTitle').value.trim();
+
+    if (title === "" || currentItems.length === 0) {
+        alert("List title and items cannot be empty!");
+        return;
+    }
+
+    const list = { title, items: currentItems.slice() }; // Create a new list object
+    lists.push(list);
+    localStorage.setItem('lists', JSON.stringify(lists));
+    displayLists(); // Refresh the displayed lists
+    document.getElementById('listTitle').value = ""; // Clear the title input
+    currentItems = []; // Reset current items
+    displayChecklist(); // Clear the checklist display
+}
+
+// Function to display lists
+function displayLists() {
+    const container = document.getElementById('listsContainerContent');
+    container.innerHTML = ""; // Clear existing lists
+    lists.forEach((list, index) => {
+        const listDiv = document.createElement('div');
+        listDiv.className = "note"
+        listDiv.innerHTML = `
+            <h4>${list.title}</h4>
+            <button onclick="openList(${index})">Open</button>
+            <button onclick="deleteList(${index})">Delete</button>
+        `;
+        container.appendChild(listDiv);
+    });
+}
+
+// Function to delete a list
+function deleteList(index) {
+    if (confirm("Are you sure you want to delete this list?")) {
+        lists.splice(index, 1);
+        localStorage.setItem('lists', JSON.stringify(lists));
+        displayLists();
+    }
+}
+
+// Function to cancel adding a list
+function cancelList() {
+    showSection('listsContainer'); // Show the lists section
+}
+
+// Call displayLists on page load
+displayLists();
+displayNotes();
+
+
+
   </script>
 </body>
 </html>
