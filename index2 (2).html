@@ -1,665 +1,295 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ColorNotes Inspired Notes App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f3f3f3;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-    h1 {
-      text-align: center;
-      background-color: #ffa500;
-      color: white;
-      padding: 10px;
-      margin: 0;
-    }
-    button {
-      padding: 8px 12px;
-      margin: 5px;
-      cursor: pointer;
-      border: none;
-      background-color: #ffa500;
-      color: white;
-      border-radius: 4px;
-    }
-    button:hover {
-      background-color: #ff8c00;
-    }
-    textarea {
-      width: 90%;
-      height: 150px;
-      margin: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-family: Arial, sans-serif;
-      font-size: 16px;
-    }
-    input[type="password"] {
-      padding: 5px;
-      margin: 10px 0;
-      width: 80%;
-    }
-    .container {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
-    }
-    .note {
-      background: #fffacd;
-      padding: 10px;
-      margin: 10px;
-      border: 1px solid #ffa500;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    .hidden {
-      display: none;
-    }
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 60px;
-      background-color: #ffa500;
-      color: white;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-    }
-    .nav-button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .add-button {
-      background-color: white;
-      color: #ffa500;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      font-size: 30px;
-      line-height: 60px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      position: relative;
-      bottom: 20px;
-    }
-    .add-button:hover {
-      background-color: #ff8c00;
-      color: white;
-    }
-
-    /* Password Modal */
-    #passwordModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      visibility: hidden;
-    }
-    .modal-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 5px;
-      width: 300px;
-    }
-    #passwordModal input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    #passwordModal button {
-      width: 100%;
-      padding: 10px;
-    }
-
-    #addListSection {
-    background-color: #fff; /* White background */
-    padding: 20px; /* Padding around the content */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    margin-top: 20px; /* Space above the section */
-}
-
-.input-field {
-    width: 100%; /* Full width */
-    padding: 10px; /* Padding inside the input */
-    margin: 10px 0; /* Margin above and below */
-    border: 1px solid #ccc; /* Light gray border */
-    border-radius: 4px; /* Rounded corners */
-}
-
-button {
-    padding: 8px 12px; /* Padding for buttons */
-    margin: 5px; /* Margin around buttons */
-    cursor: pointer; /* Pointer cursor on hover */
-    border: none; /* No border */
-    background-color: #ffa500; /* Orange background */
-    color: white; /* White text */
-    border-radius: 4px; /* Rounded corners */
-}
-
-button:hover {
-    background-color: #ff8c00; /* Darker orange on hover */
-}
-
-.close-button {
-    background-color: #ff4c4c; /* Red background for close button */
-}
-
-.close-button:hover {
-    background-color: #ff1c1c; /* Darker red on hover */
-}
-
-.modal {
-    position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    
-}
-
-.modal-content {
-    background-color: white;
-      padding: 20px;
-      border-radius: 5px;
-      width: 300px;
-}
-
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full height */
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .container {
+            flex: 1; /* Take up the remaining space */
+            background: #e0e0e0; /* Light Gray */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative; /* For absolute positioning of data entry */
+        }
+        .data-entry {
+            padding: 20px;
+            background-color: #d1e7dd; /* Light Green */
+            border-radius: 8px;
+            display: none; /* Initially hidden */
+            width: 100%; /* Full width */
+            position: absolute; /* Take full page */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10; /* Ensure it appears above other content */
+            overflow-y: auto; /* Allow scrolling */
+        }
+        .data-type, .data-title {
+            margin-bottom: 20px;
+        }
+        .data-list {
+            list-style-type: none;
+            padding: 0;
+            width: 100%; /* Full width */
+        }
+        .data-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            position: relative;
+            cursor: pointer; /* Indicate that the item is clickable */
+        }
+        .data-item button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: #dc3545; /* Red */
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .data-item button:hover {
+            background-color: #c82333;
+        }
+        .details {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa; /* Light Gray */
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        /* Color coding for different data types */
+        .bank { background-color: #add8e6; } /* Light Blue */
+        .credit-card { background-color: #d3aed1; } /* Light Purple */
+        .digital-account { background-color: #99d8d8; } /* Light Teal */
+        .investment { background-color: #d8bfd8; } /* Thistle */
+        .insurance { background-color: #ffffe0; } /* Light Yellow */
+        .tax { background-color: #ffcccb; } /* Light Red */
+        .other { background-color: #d3d3d3; } /* Light Gray */
+        input[type="text"], select, textarea {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        textarea {
+            height: 150px; /* Larger height for text area */
+            resize: vertical;
+        }
+        button.add-data, button.save-data, button.close-data-entry {
+            padding: 12px 18px;
+            background-color: #007bff; /* Blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        button.add-data:hover, button.save-data:hover, button.close-data-entry:hover {
+            background-color: #0056b3;
+        }
+        .toggle-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #007bff; /* Blue */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Circular button */
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba( 0, 0, 0, 0.2);
+        }
+        .toggle-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-  <h1>Notes App</h1>
 
-  <div id="notesSection" class="container">
-    <h2>Your Notes</h2>
-    <div id="notesContainer"></div>
-  </div>
-
-  <div id="listsContainer" class="container hidden">
-    <h2>Your Lists</h2>
-    <div id="listsSection">
-        <div id="listsContainerContent"></div>
+    <h1>Finance App</h1>
+    <div class="container">
+        <div class="data-entry" id="data-entry">
+            <h2>Add Data</h2>
+            <label for="data-title">Data Title:</label>
+            <input type="text" id="data-title" placeholder="Enter data title">
+            <label for="data-type">Select Data Type:</label>
+            <select id="data-type">
+                <option value="bank">Bank Information</option>
+                <option value="credit-card">Credit Card</option>
+                <option value="digital-account">Digital Account</option>
+                <option value="investment">Investment Account</option>
+                <option value="insurance">Insurance Policy</option>
+                <option value="tax">Tax Information</option>
+                <option value="other">Other Data</option>
+            </select>
+            <br>
+            <label for="data-input">Enter Data:</label>
+            <textarea id="data-input" placeholder="Enter your sensitive data"></textarea>
+            <button class="add-data" onclick="addData()">Add Data</button>
+            <button class="close-data-entry" onclick="toggleDataEntry()">Close</button>
+        </div>
+        <ul class="data-list" id="data-list"></ul>
     </div>
-</div>
-  
-
-  <!-- Add Note Form -->
-  <div id="addNoteSection" class="container hidden">
-    <h3>Add a New Note</h3>
-    <input id="noteTitle" type="text" placeholder="Enter note title...">
-    <textarea id="noteContent" placeholder="Write your note here..."></textarea>
-    <input type="password" id="notePassword" placeholder="Optional Password">
-    <button onclick="saveNote()">Save Note</button>
-    <button onclick="cancelNote()">Cancel</button>
-  </div>
-
-  <!-- Password Modal -->
-  <div id="passwordModal">
-    <div class="modal-content">
-      <h3>Enter Password</h3>
-      <input type="password" id="passwordInput" placeholder="Password">
-      <button onclick="verifyPassword()">Submit</button>
-      <button onclick="closePasswordModal()">Close</button>
-    </div>
-  </div>
-
-  
-  <!-- Settings Section -->
-  <div id="settings" class="container">
-    <h2>Settings</h2>
-    <h3>Privacy</h3>
-    <label>
-      Sync Data:
-      <input type="checkbox" id="syncDataToggle">
-    </label>
-    <h3>Other Settings</h3>
-    <button onclick="showCredits()">Credits</button>
-    <div id="creditsSection" style="display:none;">
-      <p>Developed by <strong>Anagh Manglick</strong><br>Inspired by Color Notes</p>
-    </div>
-    <h3>Backup/Import</h3>
-    <button onclick="backupNotes()">Backup Notes</button>
-    <input type="file" id="importFile" onchange="prepareImport(event)">
-    <button onclick="importNotes()">Continue Import</button>
-  </div>
-
-<!-- Add Lists Section -->
-<div id="addListSection" class="container">>
-<h3>Add a New List</h3>
-    <input id="listTitle" type="text" placeholder="Enter list title...">
-    <div id="checklistContainer"></div> <!-- Container for checklist items -->
-    <input id="newItem" type="text" placeholder="Enter item..."> <!-- Input for new item -->
-    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
-    <button onclick="saveList()">Save List</button>
-</div>
-</div>
-
-<!-- Add Options Modal -->
-<div id="addListSection" class="container hidden">
-    <h3>Add a New List</h3>
-    <input id="listTitle" type="text" placeholder="Enter list title..." class="input-field">
-    <div id="checklistContainer"></div> <!-- Container for checklist items -->
-    <input id="newItem" type="text" placeholder="Enter item..." class="input-field"> <!-- Input for new item -->
-    <button onclick="addItem()">Add Item</button> <!-- Button to add item -->
-    <button onclick="saveList()">Save List</button>
-    <button onclick="cancelList()">Cancel</button>
-    <button onclick="closeAddListSection()" class="close-button">Close</button> <!-- Close button -->
-</div>
-</div>
-  
-  <div class="bottom-nav">
-    <button class="nav-button" onclick="showSection('listsContainer')">Lists</button>
-    <button class="nav-button" onclick="showSection('notesSection')">Notes</button>
-    <div class="add-button" onclick="showAddOptions()">+</div>
-<button class="nav-button" onclick="showSection('settings')">Settings</button>
-<button class="nav-button " onclick="showSection('moreSection')">More</button>
-
-</div>
-
-<!-- More Section -->
-<div id="moreSection" class="container hidden">
-    <h2>More Features Coming Soon!</h2>
-    <p>This section will include features like:</p>
-    <ul>
-        <li>Sync Feature</li>
-        <li>Login Feature</li>
-    </ul>
-    <p>Stay tuned for updates!</p>
-</div>
-
-  <script>
-    
-    let notes = JSON.parse(localStorage.getItem('notes')) || []; 
- 
-    function showCredits() {
-      const credits = document.getElementById('creditsSection');
-      credits.style.display = credits.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function backupNotes() {
-      const blob = new Blob([JSON.stringify(notes)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'notes_backup.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function prepareImport(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const importedNotes = JSON.parse(e.target.result);
-          notes = [...notes, ...importedNotes];
-        };
-        reader.readAsText(file);
-      }
-    }
-
-    function importNotes() {
-      localStorage.setItem('notes', JSON.stringify(notes));
-      displayNotes();
-      alert('Notes imported successfully!');
-    }
-    
-    function showSection(sectionId) {
-    document.querySelectorAll('.container').forEach(section => {
-        section.classList.add('hidden'); // Hide all sections
-    });
-    document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
-}
-
-    function showAddNote() {
-      showSection('addNoteSection');
-      document.getElementById('noteContent').value = "";
-      document.getElementById('noteTitle').value = "";
-      document.getElementById('notePassword').value = "";
-    }
-
-    function cancelNote() {
-      showSection('notesSection');
-    }
-
-    function saveNote() {
-      const title = document.getElementById('noteTitle').value.trim();
-      const content = document.getElementById('noteContent').value.trim();
-      const password = document.getElementById('notePassword').value.trim();
-
-      if (content === "") {
-        alert("Note content cannot be empty!");
-        return;
-      }
-
-      const note = { title, content, password };
-      notes.push(note);
-      localStorage.setItem('notes', JSON.stringify(notes));
-      displayNotes();
-      showSection('notesSection');
-    }
-
-    function displayNotes() {
-      const container = document.getElementById('notesContainer');
-      container.innerHTML = "";
-      notes.forEach((note, index) => {
-        const noteDiv = document.createElement('div');
-        noteDiv.className = "note";
-        noteDiv.innerHTML = `
-          <h4>${note.title}</h4>
-          <p>${note.password ? "(Password Protected Note)" : note.content}</p>
-          <button onclick="openNote(${index})">Open</button>
-          <button onclick="deleteNote(${index})">Delete</button>
-        `;
-        container.appendChild(noteDiv);
-      });
-    }
-
-    function openNote(index) {
-      const note = notes[index];
-      if (note.password) {
-        document.getElementById('passwordModal').style.visibility = 'visible';
-        document.getElementById('passwordInput').value = "";
-        document.getElementById('passwordModal').dataset.noteIndex = index;
-      } else {
-        showNoteContent(note);
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-    // Hide all sections initially
-    document.querySelectorAll('.container').forEach(section => {
-        section.classList.add('hidden'); // Hide all sections
-    });
-
-    // Show only the notes section on page load
-    showSection('notesSection'); // Show the notes section
-
-    // Load notes and lists from local storage
-    displayNotes();
-    displayLists();
-});
-
-    function closePasswordModal() {
-    document.getElementById('passwordModal').style.visibility = 'hidden';
-    document.getElementById('passwordInput').value = ""; // Clear the password input field
-}
-
-function showListsSection() {
-    showSection('listsContainer'); // Show the lists container
-    displayLists(); // Refresh the displayed lists
-    document.getElementById('addListSection').classList.add('hidden'); // Ensure add list section is hidden
-}
-
-    function verifyPassword() {
-      const password = document.getElementById('passwordInput').value;
-      const index = document.getElementById('passwordModal').dataset.noteIndex;
-      const note = notes[index];
-
-      if (password === note.password) {
-        document.getElementById('passwordModal').style.visibility = 'hidden';
-        showNoteContent(note);
-      } else {
-        alert("Incorrect password!");
-      }
-    }
-
-    function showNoteContent(note) {
-      document.getElementById('noteTitle').value = note.title;
-      document.getElementById('noteContent').value = note.content;
-      document.getElementById('notePassword').value = note.password;
-      showSection('addNoteSection');
-    }
-
-    function deleteNote(index) {
-      if (confirm("Are you sure you want to delete this note?")) {
-        notes.splice(index, 1);
-        localStorage.setItem('notes', JSON.stringify(notes));
-        displayNotes();
-      }
-    }
-
-    function closeAddListSection() {
-    document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
-    showSection('listsContainer'); // Show the lists section
-}
-
-    // Function to show the add options modal
-function showAddOptions() {
-    const modal = document.getElementById('addOptionsModal');
-    modal.style.display = 'block'; // Show the modal
-    modal.style.opacity = '1'; // Optional: Add fade-in effect
-}
-
-// Function to close the add options modal
-function closeAddOptions() {
-    const modal = document.getElementById('addOptionsModal');
-    modal.style.display = 'none'; // Hide the modal
-    modal.style.opacity = '0'; // Optional: Add fade-out effect
-}
-
-// Function to open a list and pre-fill the add list section
-
-
-// Function to show the add list section
-// Function to show the add list section
-function showAddListSection() {
-    // Hide all sections first
-    document.querySelectorAll('.container').forEach(section => {
-        section.classList.add('hidden'); // Hide all sections
-    });
-
-    // Show the add list section
-    document.getElementById('addListSection').classList.remove('hidden'); // Show the add list section
-    document.getElementById('listTitle').value = ""; // Clear the title input
-    document.getElementById('newItem').value = ""; // Clear the new item input
-    currentItems = []; // Reset current items
-    displayChecklist(); // Clear the checklist display
-}
-
-// Function to cancel adding a list
-function cancelList() {
-    // Hide the add list section and show the lists section
-    document.getElementById('addListSection').classList.add('hidden'); // Hide the add list section
-    showSection('listsContainer'); // Show the lists section
-}
-
-// Function to show a specific section
-function showSection(sectionId) {
-    document.querySelectorAll('.container').forEach(section => {
-        section.classList.add('hidden'); // Hide all sections
-    });
-    document.getElementById(sectionId).classList.remove('hidden'); // Show the selected section
-}
-
-
-
-// Function to save a new list
-function saveList() {
-    const title = document.getElementById('listTitle').value.trim();
-
-    if (title === "" || currentItems.length === 0) {
-        alert("List title and items cannot be empty!");
-        return;
-    }
-
-    // Check for duplicates
-    const existingListIndex = lists.findIndex(list => list.title === title);
-    if (existingListIndex !== -1) {
-        alert("A list with this title already exists!");
-        return;
-    }
-
-    const list = { title, items: currentItems.slice() }; // Create a new list object
-    lists.push(list);
-    localStorage.setItem('lists', JSON.stringify(lists));
-    displayLists(); // Refresh the displayed lists
-    document.getElementById('listTitle').value = ""; // Clear the title input
-    currentItems = []; // Reset current items
-    displayChecklist(); // Clear the checklist display
-}
-
-// Function to display lists
-function displayLists() {
-    const container = document.getElementById('listsContainerContent');
-    container.innerHTML = ""; // Clear existing lists
-    lists.forEach((list, index) => {
-        const listDiv = document.createElement('div');
-        listDiv.className = "list";
-        listDiv.innerHTML = `
-           <button onclick="openList(${index})">Open</button>
-            <button onclick="deleteList(${index})">Delete</button>
-        `;
-        container.appendChild(listDiv);
-    });
-}
-
-// Function to open a list and pre-fill the add list section
-function openList(index) {
-    const list = lists[index];
-    document.getElementById('listTitle').value = list.title;
-    currentItems = list.items.slice(); // Copy items to currentItems
-    displayChecklist(); // Display the checklist with items
-    showSection('addListSection'); // Show the add list section
-}
-
-
-
-    const lists = JSON.parse(localStorage.getItem('lists')) || [];
-let currentItems = []; // Array to hold current checklist items
-
-// Function to show the lists section
-function showListsSection() {
-    showSection('listsContainer');
-    displayLists(); // Refresh the displayed lists
-}
-
-// Function to show the add list section
-function showAddListSection() {
-    showSection('addListSection');
-    document.getElementById('listTitle').value = "";
-    document.getElementById('newItem').value = "";
-    currentItems = []; // Reset current items
-    displayChecklist(); // Clear the checklist display
-}
-
-// Function to add an item to the checklist
-function addItem() {
-    const newItemInput = document.getElementById('newItem');
-    const newItemValue = newItemInput.value.trim();
-
-    if (newItemValue === "") {
-        alert("Item cannot be empty!");
-        return;
-    }
-
-    currentItems.push(newItemValue); // Add the new item to the current items array
-    newItemInput.value = ""; // Clear the input field
-    displayChecklist(); // Update the checklist display
-}
-
-// Function to display the checklist
-function displayChecklist() {
-    const checklistContainer = document.getElementById('checklistContainer');
-    checklistContainer.innerHTML = ""; // Clear existing items
-
-    currentItems.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.innerHTML = `
-            <input type="checkbox" id="item-${index}">
-            <label for="item-${index}">${item}</label>
-            <button onclick="removeItem(${index})">Remove</button>
-        `;
-        checklistContainer.appendChild(itemDiv);
-    });
-}
-
-// Function to remove an item from the checklist
-function removeItem(index) {
-    currentItems.splice(index, 1); // Remove the item from the array
-    displayChecklist(); // Update the checklist display
-}
-
-// Function to save a new list
-function saveList() {
-    const title = document.getElementById('listTitle').value.trim();
-
-    if (title === "" || currentItems.length === 0) {
-        alert("List title and items cannot be empty!");
-        return;
-    }
-
-    const list = { title, items: currentItems.slice() }; // Create a new list object
-    lists.push(list);
-    localStorage.setItem('lists', JSON.stringify(lists));
-    displayLists(); // Refresh the displayed lists
-    document.getElementById('listTitle').value = ""; // Clear the title input
-    currentItems = []; // Reset current items
-    displayChecklist(); // Clear the checklist display
-}
-
-// Function to display lists
-function displayLists() {
-    const container = document.getElementById('listsContainerContent');
-    container.innerHTML = ""; // Clear existing lists
-    lists.forEach((list, index) => {
-        const listDiv = document.createElement('div');
-        listDiv.className = "note"
-        listDiv.innerHTML = `
-            <h4>${list.title}</h4>
-            <button onclick="openList(${index})">Open</button>
-            <button onclick="deleteList(${index})">Delete</button>
-        `;
-        container.appendChild(listDiv);
-    });
-}
-
-// Function to delete a list
-function deleteList(index) {
-    if (confirm("Are you sure you want to delete this list?")) {
-        lists.splice(index, 1);
-        localStorage.setItem('lists', JSON.stringify(lists));
-        displayLists();
-    }
-}
-
-// Function to cancel adding a list
-function cancelList() {
-    showSection('listsContainer'); // Show the lists section
-}
-
-// Call displayLists on page load
-displayLists();
-displayNotes();
-
-
-
-  </script>
+
+    <button class="toggle-button" onclick="toggleDataEntry()">+</button>
+
+    <script>
+        function toggleDataEntry() {
+            const dataEntry = document.getElementById('data-entry');
+            dataEntry.style.display = dataEntry.style.display === 'none' || dataEntry.style.display === '' ? 'block' : 'none';
+        }
+
+        function addData() {
+            const dataTitle = document.getElementById('data-title').value;
+            const dataType = document.getElementById('data-type').value;
+            const dataInput = document.getElementById('data-input').value;
+            const dataList = document.getElementById('data-list');
+
+            if (dataTitle.trim() === "" || dataInput.trim() === "") {
+                alert("Please enter both title and data.");
+                return;
+            }
+
+            const listItem = document.createElement('li');
+            listItem.className = 'data-item ' + dataType.replace('-', ' ');
+            listItem.textContent = dataTitle;
+
+            // Create a button to delete the data
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = function() {
+                dataList.removeChild(listItem);
+                saveDataToLocalStorage(); // Save after deletion
+            };
+            listItem.appendChild(deleteButton);
+
+            // Create a details container (full container for details)
+            const details = document.createElement('div');
+            details.className = 'details container'; // Full container for details
+            details.innerHTML = `
+                <h3>Details</h3>
+                <label for="edit-data-title">Data Title:</label>
+                <input type="text" id="edit-data-title" value="${dataTitle}">
+                <p>Data Type: ${dataType.replace('-', ' ')}</p>
+                <label for="edit-data-input">Data:</label>
+                <textarea id="edit-data-input">${dataInput}</textarea>
+                <button class="save-data" onclick="saveData(this)">Save</button>
+            `;
+            listItem.appendChild(details);
+
+            // Only toggle details visibility when the list item (not child elements) is clicked
+            listItem.addEventListener('click', function(event) {
+                // If the click target is not an input or textarea (i.e., click on the list item itself)
+                if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+                    details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                }
+            });
+
+            dataList.appendChild(listItem);
+            document.getElementById('data-title').value = ""; // Clear title input
+            document.getElementById('data-input').value = ""; // Clear data input
+
+            saveDataToLocalStorage(); // Save after adding data
+        }
+
+        function saveData(button) {
+            const details = button.parentElement;
+            const newTitle = details.querySelector('#edit-data-title').value;
+            const newData = details.querySelector('#edit-data-input').value;
+
+            // Update the title in the list item
+            const listItem = details.parentElement;
+            listItem.firstChild.textContent = newTitle;
+
+            // Optionally, you can also update the displayed data in the details section
+            details.querySelector('#edit-data-title').value = newTitle;
+            details.querySelector('#edit-data-input').value = newData;
+
+            saveDataToLocalStorage(); // Save after editing
+        }
+
+        function saveDataToLocalStorage() {
+            const dataList = document.getElementById('data-list');
+            const items = [];
+            dataList.querySelectorAll('.data-item').forEach(item => {
+                const title = item.firstChild.textContent;
+                const type = item.classList[1]; // Extract the type from the class name
+                const input = item.querySelector('.details textarea').value;
+                items.push({ title, type, input });
+            });
+            localStorage.setItem('financeData', JSON.stringify(items)); // Save to localStorage
+        }
+
+        function loadDataFromLocalStorage() {
+            const storedData = JSON.parse(localStorage.getItem('financeData'));
+            if (storedData) {
+                const dataList = document.getElementById('data-list');
+                storedData.forEach(data => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'data-item ' + data.type;
+                    listItem.textContent = data.title;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function() {
+                        dataList.removeChild(listItem);
+                        saveDataToLocalStorage(); // Save after deletion
+                    };
+                    listItem.appendChild(deleteButton);
+
+                    const details = document.createElement('div');
+                    details.className = 'details container'; // Full container for details
+                    details.innerHTML = `
+                        <h3>Details</h3>
+                        <label for="edit-data-title">Data Title:</label>
+                        <input type="text" id="edit-data-title" value="${data.title}">
+                        <p>Data Type: ${data.type.replace('-', ' ')}</p>
+                        <label for="edit-data-input">Data:</label>
+                        <textarea id="edit-data-input">${data.input}</textarea>
+                        <button class="save-data" onclick="saveData(this)">Save</button>
+                    `;
+                    listItem.appendChild(details);
+
+                    // Toggle details visibility when list item is clicked
+                    listItem.addEventListener('click', function(event) {
+                        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+                            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                        }
+                    });
+
+                    dataList.appendChild(listItem);
+                });
+            }
+        }
+
+        // Load data when the page is loaded
+        window.onload = loadDataFromLocalStorage;
+    </script>
+
 </body>
 </html>
