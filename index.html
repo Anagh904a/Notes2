@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full height */
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .container {
+            flex: 1; /* Take up the remaining space */
+            background: #e0e0e0; /* Light Gray */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative; /* For absolute positioning of data entry */
+        }
+        .data-entry {
+            padding: 20px;
+            background-color: #d1e7dd; /* Light Green */
+            border-radius: 8px;
+            display: none; /* Initially hidden */
+            width: 100%; /* Full width */
+            position: absolute; /* Take full page */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10; /* Ensure it appears above other content */
+            overflow-y: auto; /* Allow scrolling */
+        }
+        .data-type, .data-title {
+            margin-bottom: 20px;
+        }
+        .data-list {
+            list-style-type: none;
+            padding: 0;
+            width: 100%; /* Full width */
+        }
+        .data-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            position: relative;
+            cursor: pointer; /* Indicate that the item is clickable */
+        }
+        .data-item button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: #dc3545; /* Red */
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .data-item button:hover {
+            background-color: #c82333;
+        }
+        .details {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa; /* Light Gray */
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        /* Color coding for different data types */
+        .bank { background-color: #add8e6; } /* Light Blue */
+        .credit-card { background-color: #d3aed1; } /* Light Purple */
+        .digital-account { background-color: #99d8d8; } /* Light Teal */
+        .investment { background-color: #d8bfd8; } /* Thistle */
+        .insurance { background-color: #ffffe0; } /* Light Yellow */
+        .tax { background-color: #ffcccb; } /* Light Red */
+        .other { background-color: #d3d3d3; } /* Light Gray */
+        input[type="text"], select, textarea {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        textarea {
+            height: 150px; /* Larger height for text area */
+            resize: vertical;
+        }
+        button.add-data, button.save-data, button.close-data-entry {
+            padding: 12px 18px;
+            background-color: #007bff; /* Blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        button.add-data:hover, button.save-data:hover, button.close-data-entry:hover {
+            background-color: #0056b3;
+        }
+        .toggle-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #007bff; /* Blue */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Circular button */
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba( 0, 0, 0, 0.2);
+        }
+        .toggle-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Finance App</h1>
+    <div class="container">
+        <div class="data-entry" id="data-entry">
+            <h2>Add Data</h2>
+            <label for="data-title">Data Title:</label>
+            <input type="text" id="data-title" placeholder="Enter data title">
+            <label for="data-type">Select Data Type:</label>
+            <select id="data-type">
+                <option value="bank">Bank Information</option>
+                <option value="credit-card">Credit Card</option>
+                <option value="digital-account">Digital Account</option>
+                <option value="investment">Investment Account</option>
+                <option value="insurance">Insurance Policy</option>
+                <option value="tax">Tax Information</option>
+                <option value="other">Other Data</option>
+            </select>
+            <br>
+            <label for="data-input">Enter Data:</label>
+            <textarea id="data-input" placeholder="Enter your sensitive data"></textarea>
+            <button class="add-data" onclick="addData()">Add Data</button>
+            <button class="close-data-entry" onclick="toggleDataEntry()">Close</button>
+        </div>
+        <ul class="data-list" id="data-list"></ul>
+    </div>
+
+    <button class="toggle-button" onclick="toggleDataEntry()">+</button>
+
+    <script>
+        function toggleDataEntry() {
+            const dataEntry = document.getElementById('data-entry');
+            dataEntry.style.display = dataEntry.style.display === 'none' || dataEntry.style.display === '' ? 'block' : 'none';
+        }
+
+        function addData() {
+            const dataTitle = document.getElementById('data-title').value;
+            const dataType = document.getElementById('data-type').value;
+            const dataInput = document.getElementById('data-input').value;
+            const dataList = document.getElementById('data-list');
+
+            if (dataTitle.trim() === "" || dataInput.trim() === "") {
+                alert("Please enter both title and data.");
+                return;
+            }
+
+            const listItem = document.createElement('li');
+            listItem.className = 'data-item ' + dataType.replace('-', ' ');
+            listItem.textContent = dataTitle;
+
+            // Create a button to delete the data
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = function() {
+                dataList.removeChild(listItem);
+                saveDataToLocalStorage(); // Save after deletion
+            };
+            listItem.appendChild(deleteButton);
+
+            // Create a details container (full container for details)
+            const details = document.createElement('div');
+            details.className = 'details container'; // Full container for details
+            details.innerHTML = `
+                <h3>Details</h3>
+                <label for="edit-data-title">Data Title:</label>
+                <input type="text" id="edit-data-title" value="${dataTitle}">
+                <p>Data Type: ${dataType.replace('-', ' ')}</p>
+                <label for="edit-data-input">Data:</label>
+                <textarea id="edit-data-input">${dataInput}</textarea>
+                <button class="save-data" onclick="saveData(this)">Save</button>
+            `;
+            listItem.appendChild(details);
+
+            // Only toggle details visibility when the list item (not child elements) is clicked
+            listItem.addEventListener('click', function(event) {
+                // If the click target is not an input or textarea (i.e., click on the list item itself)
+                if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+                    details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                }
+            });
+
+            dataList.appendChild(listItem);
+            document.getElementById('data-title').value = ""; // Clear title input
+            document.getElementById('data-input').value = ""; // Clear data input
+
+            saveDataToLocalStorage(); // Save after adding data
+        }
+
+        function saveData(button) {
+            const details = button.parentElement;
+            const newTitle = details.querySelector('#edit-data-title').value;
+            const newData = details.querySelector('#edit-data-input').value;
+
+            // Update the title in the list item
+            const listItem = details.parentElement;
+            listItem.firstChild.textContent = newTitle;
+
+            // Optionally, you can also update the displayed data in the details section
+            details.querySelector('#edit-data-title').value = newTitle;
+            details.querySelector('#edit-data-input').value = newData;
+
+            saveDataToLocalStorage(); // Save after editing
+        }
+
+        function saveDataToLocalStorage() {
+            const dataList = document.getElementById('data-list');
+            const items = [];
+            dataList.querySelectorAll('.data-item').forEach(item => {
+                const title = item.firstChild.textContent;
+                const type = item.classList[1]; // Extract the type from the class name
+                const input = item.querySelector('.details textarea').value;
+                items.push({ title, type, input });
+            });
+            localStorage.setItem('financeData', JSON.stringify(items)); // Save to localStorage
+        }
+
+        function loadDataFromLocalStorage() {
+            const storedData = JSON.parse(localStorage.getItem('financeData'));
+            if (storedData) {
+                const dataList = document.getElementById('data-list');
+                storedData.forEach(data => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'data-item ' + data.type;
+                    listItem.textContent = data.title;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function() {
+                        dataList.removeChild(listItem);
+                        saveDataToLocalStorage(); // Save after deletion
+                    };
+                    listItem.appendChild(deleteButton);
+
+                    const details = document.createElement('div');
+                    details.className = 'details container'; // Full container for details
+                    details.innerHTML = `
+                        <h3>Details</h3>
+                        <label for="edit-data-title">Data Title:</label>
+                        <input type="text" id="edit-data-title" value="${data.title}">
+                        <p>Data Type: ${data.type.replace('-', ' ')}</p>
+                        <label for="edit-data-input">Data:</label>
+                        <textarea id="edit-data-input">${data.input}</textarea>
+                        <button class="save-data" onclick="saveData(this)">Save</button>
+                    `;
+                    listItem.appendChild(details);
+
+                    // Toggle details visibility when list item is clicked
+                    listItem.addEventListener('click', function(event) {
+                        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+                            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                        }
+                    });
+
+                    dataList.appendChild(listItem);
+                });
+            }
+        }
+
+        // Load data when the page is loaded
+        window.onload = loadDataFromLocalStorage;
+    </script>
+
+</body>
+  </html>
